@@ -26,7 +26,7 @@ The main functions are:
 - For adding click and glide functionality
 
 
-- addMouseWheelZoom()
+- addMouseWheelZoom(...) / removeMouseWheelZoom(...)
 - For adding MouseWheel Zoom functionality
 
 
