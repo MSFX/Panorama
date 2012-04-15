@@ -27,7 +27,7 @@ The main functions are:
 
 
 - addMouseWheelZoom(...) / removeMouseWheelZoom(...)
-- For adding MouseWheel Zoom functionality
+- For adding / removing MouseWheel Zoom functionality
 
 
 Please view the docs for more information - http://docs.msfx.co.uk/as3/panorama/
@@ -35,3 +35,11 @@ Please view the docs for more information - http://docs.msfx.co.uk/as3/panorama/
 
 MSFX Matt Stuttard Parker
 http://msfx.co.uk
+
+
+
+Panorama Wish List:
+
+A variable that dictates direction of movement?  i.e. UP, UP_RIGHT, DOWN_LEFT ?
+Publicise the point where the mouse goes down? 
+Calculate angle between mouseDown and currentMouse?

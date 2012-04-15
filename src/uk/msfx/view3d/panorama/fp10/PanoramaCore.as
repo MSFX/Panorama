@@ -1,7 +1,7 @@
 /**
  * Panorama by MSFX Matt Stuttard Parker
  * Version 1.0
- * 02.04.2012
+ * 15.04.2012
  * 
  * Copyright (c) MSFX Matt Stuttard Parker
  * 
