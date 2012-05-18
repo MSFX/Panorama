@@ -1,7 +1,7 @@
 /**
- * Panorama() by MSFX Matt Stuttard Parker
+ * Panorama by MSFX Matt Stuttard Parker
  * Version 1.0
- * 15.04.2012
+ * 02.04.2012
  * 
  * Copyright (c) MSFX Matt Stuttard Parker
  * 
@@ -150,19 +150,18 @@ package uk.msfx.view3d.panorama.fp10
 		 */
 		protected var mouseDown:Boolean = false;
 		
+		/**
+		 * Whether click and gliding is active
+		 * @private 
+		 */
+		protected var _clickAndGliding:Boolean = false;
+		
 		
 		/** 
 		 * The point where the user clicked to calculate the direction to rotate.
 		 * @private 
 		 */
 		protected var pointOfClick:Point = new Point(0, 0);
-		
-		
-		/** 
-		 * Whether we're using clickAndDrag.
-		 * @private 
-		 */
-		protected var useClickAndDrag:Boolean = false;
 		
 		
 		/**
@@ -219,6 +218,8 @@ package uk.msfx.view3d.panorama.fp10
 			
 			// handler for the mouse down
 			sphere.addEventListener(MouseEvent3D.MOUSE_DOWN, mouseEventHandler);
+			
+			_clickAndGliding = true;
 		}
 		
 		/**
@@ -228,6 +229,8 @@ package uk.msfx.view3d.panorama.fp10
 		{
 			// remove mouse down handler
 			sphere.removeEventListener(MouseEvent3D.MOUSE_DOWN, mouseEventHandler);
+			
+			_clickAndGliding = false;
 		}
 		
 		/**
@@ -309,6 +312,7 @@ package uk.msfx.view3d.panorama.fp10
 			// update eased values as well as the holder/sphere values to prevent sphere easing back to original position
 			holder.rotationX = rotY = newRotY = xAxis;
 			sphere.rotationY = rotX = newRotX = yAxis;
+			rot = sphere.rotationY;
 		}
 		
 		/**
@@ -464,6 +468,28 @@ package uk.msfx.view3d.panorama.fp10
 			// output the x/y rotation values - useful if you want to use the restrictions
 			//trace("horiz (y): " + Math.round(sphere.rotationY) + ", vert (x): " + Math.round(holder.rotationX));
 		}
+		
+		/**
+		 * Whether click and gliding is active.
+		 */
+		public function get clickAndGliding():Boolean { return _clickAndGliding; }
+		
+		/** @private */
+		public function set clickAndGliding(value:Boolean):void { _clickAndGliding = value; }
+		
+		
+		/**
+		 * Create Sphere
+		 */
+		override protected function createSphere():void 
+		{
+			super.createSphere();
+			
+			// add listener for intial click
+			if(_clickAndGliding) sphere.addEventListener(MouseEvent3D.MOUSE_DOWN, mouseEventHandler);
+		}
+		
+		
 		
 		/**
 		 * Added To Stage Event Handler

@@ -1,7 +1,7 @@
 /**
  * Panorama by MSFX Matt Stuttard Parker
  * Version 1.0
- * 15.04.2012
+ * 02.04.2012
  * 
  * Copyright (c) MSFX Matt Stuttard Parker
  * 
@@ -44,6 +44,7 @@ package uk.msfx.view3d.panorama.fp10
 	import away3d.primitives.Sphere;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Vector3D;
 	
 	
 	/**
@@ -117,6 +118,12 @@ package uk.msfx.view3d.panorama.fp10
 		protected var _aperture:Number = 22;
 		
 		
+		protected var _segmentsX:uint = 20;
+		
+		protected var _segmentsY:uint = 20;
+		
+		protected var rot:int = 0;
+		
 		/**
 		 * Constructor for the Panorama Core.
 		 * 
@@ -168,6 +175,37 @@ package uk.msfx.view3d.panorama.fp10
 			holder.rotationX = holder.rotationY = holder.rotationZ = 0;
 			scene.addChild(holder);
 			
+			// assign image to correct material holder and then to Sphere
+			if (image is MovieMaterial) 
+			{
+				movieMaterial = image;
+			}
+			else if (image is BitmapMaterial) // else bitmap material
+			{
+				bitmapMaterial = image;
+			}
+			else // unsupported material
+			{
+				trace("*************************************")
+				trace("******* UNSUPPORTED MATERIAL? *******");
+				trace("*************************************")
+			}
+			
+			// init sphere
+			createSphere();
+			
+			// listner for being added to display list
+			addEventListener(Event.ADDED_TO_STAGE, added);
+		}
+		
+		protected function createSphere():void 
+		{
+			if (sphere)
+			{
+				holder.removeChild(sphere);
+				sphere = null;
+			}
+			
 			// init sphere
 			sphere = new Sphere();
 			sphere.x = sphere.y = sphere.z = 0;
@@ -181,25 +219,14 @@ package uk.msfx.view3d.panorama.fp10
 			holder.addChild(sphere);
 			
 			// assign image to correct material holder and then to Sphere
-			if (image is MovieMaterial) 
+			if (movieMaterial) 
 			{
-				movieMaterial = image;
 				sphere.material = movieMaterial;
 			}
-			else if (image is BitmapMaterial) // else bitmap material
+			else 
 			{
-				bitmapMaterial = image;
 				sphere.material = bitmapMaterial;
 			}
-			else // unsupported material
-			{
-				trace("*************************************")
-				trace("******* UNSUPPORTED MATERIAL? *******");
-				trace("*************************************")
-			}
-			
-			// listner for being added to display list
-			addEventListener(Event.ADDED_TO_STAGE, added);
 		}
 		
 		/**
@@ -211,6 +238,7 @@ package uk.msfx.view3d.panorama.fp10
 		public function rotateTo(xAxis:int, yAxis:int):void 
 		{
 			sphere.rotateTo(xAxis, yAxis, 0);
+			rot = yAxis;
 		}
 		
 		/**
@@ -220,6 +248,7 @@ package uk.msfx.view3d.panorama.fp10
 		{
 			holder.rotateTo(0, 0, 0);
 			sphere.rotateTo(0, 0, 0);
+			rot = 0;
 		}
 		
 		/**
@@ -324,6 +353,16 @@ package uk.msfx.view3d.panorama.fp10
 		public function get rendering():Boolean { return _rendering; }
 		
 		/**
+		 * Number of segments horizontally
+		 */
+		public function get segmentsX():uint { return _segmentsX; }
+		
+		/**
+		 * Number of segments vertically
+		 */
+		public function get segmentsY():uint { return _segmentsY; }
+		
+		/**
 		 * The current zoom of the Camera.
 		 */
 		public function get zoom():int { return _zoom; }
@@ -351,12 +390,38 @@ package uk.msfx.view3d.panorama.fp10
 		
 		
 		/** @private */
-		public function set radius(value:int):void { sphere.radius = _radius = value; }
+		public function set radius(value:int):void 
+		{ 
+			_radius = value;
+			rot = sphere.rotationY;
+			
+			createSphere();
+			sphere.rotationY = rot;
+		}
 		
 		
 		/** @private */
 		public function set rendering(value:Boolean):void { _rendering = value; }
 		
+		/** @private */
+		public function set segmentsX(value:uint):void 
+		{
+			_segmentsX = value;
+			rot = sphere.rotationY;
+			
+			createSphere();
+			sphere.rotationY = rot;
+		}
+		
+		/** @private */
+		public function set segmentsY(value:uint):void 
+		{
+			_segmentsY = value;
+			rot = sphere.rotationY;
+			
+			createSphere();
+			sphere.rotationY = rot;
+		}
 		
 		/** @private */
 		public function set zoom(value:int):void { camera.zoom = _zoom = value; }
